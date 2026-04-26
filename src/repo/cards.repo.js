@@ -7,7 +7,8 @@ export default class Repositories {
 
     async getAllCards() {
 
-        //for Frentend data must be in order 
+        //for frontend data must be in order  for cards to be created..
+
         return await Card.aggregate([
             { $sort: { createdAt: -1 } },
             {
@@ -45,7 +46,7 @@ export default class Repositories {
         return await Card.findByIdAndDelete(id);
     }
 
-    // NOTES (Append-only)
+     // NOTES (Append-only in side cards)
 
     async addNote(prospectId, content) {
         const note = new Note({ prospectId, content });
@@ -56,7 +57,7 @@ export default class Repositories {
         return await Note.find({ prospectId }).sort({ createdAt: -1 });
     }
 
-    // ONBOARDING CHECKLIST
+    // ONBOARDING CHECKLIST(when stage is set to "Pilot Closed" )
 
     async getChecklistByProspect(prospectId) {
         return await Checklist.find({ prospectId }).sort({ stepNumber: 1 });
