@@ -63,9 +63,6 @@ export default class Repositories {
         return await Checklist.find({ prospectId }).sort({ stepNumber: 1 });
     }
 
-    async createChecklistItems(items) {
-        return await Checklist.insertMany(items);
-    }
 
     async checklistExists(prospectId) {
         return await Checklist.exists({ prospectId });
