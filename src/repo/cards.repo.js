@@ -6,7 +6,30 @@ export default class Repositories {
     // CARDS (Prospects)
 
     async getAllCards() {
-        return await Card.find().sort({ createdAt: -1 });
+
+        //for Frentend data must be in order 
+        return await Card.aggregate([
+            { $sort: { createdAt: -1 } },
+            {
+                $group: {
+                    _id: "$stage",
+                    prospects: {
+                        $push: {
+                            id: "$_id",
+                            name: "$name",
+                            school: "$school",
+                            role: "$role",
+                            email: "$email",
+                            phone: "$phone",
+                            source: "$source",
+                            lastContactDate: "$lastContactDate",
+                            nextFollowUpDate: "$nextFollowUpDate",
+                            createdAt: "$createdAt",
+                        },
+                    },
+                },
+            },
+        ]);
     }
 
     async getCardById(id) {

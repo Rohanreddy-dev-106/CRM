@@ -15,5 +15,4 @@ router.get("/cards/:cardId/notes", (req, res, next) => controller.getNotesByCard
 
 router.get("/cards/:cardId/checklist", (req, res, next) => controller.getChecklistByCard(req, res, next));
 router.patch("/checklist/:id", (req, res, next) => controller.updateChecklistStatus(req, res, next));
-
 export default router;
