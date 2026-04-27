@@ -53,4 +53,9 @@ const CardSchema = new Schema(
     }
 );
 
+// Supports board-style stage grouping and recent-first timeline views.
+CardSchema.index({ stage: 1, createdAt: -1 });
+CardSchema.index({ createdAt: -1 });
+CardSchema.index({ nextFollowUpDate: 1 });
+
 export default mongoose.model("Card", CardSchema);

@@ -44,6 +44,10 @@ const OnboardingChecklistSchema = new Schema(
     }
 );
 
+// Optimizes checklist retrieval and enforces one step number per prospect.
+OnboardingChecklistSchema.index({ prospectId: 1, stepNumber: 1 }, { unique: true });
+OnboardingChecklistSchema.index({ prospectId: 1, status: 1 });
+
 export default mongoose.model(
     "OnboardingChecklist",
     OnboardingChecklistSchema

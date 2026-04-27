@@ -5,32 +5,56 @@ import Checklist from "../models/checklist.schema.js";
 export default class Repositories {
     // CARDS (Prospects)
 
-    async getAllCards() {
+    async getAllCards({ page, limit }) {
 
         //for frontend data must be in order  for cards to be created..
 
-        return await Card.aggregate([
-            { $sort: { createdAt: -1 } },
-            {
-                $group: {
-                    _id: "$stage",
-                    prospects: {
-                        $push: {
-                            id: "$_id",
-                            name: "$name",
-                            school: "$school",
-                            role: "$role",
-                            email: "$email",
-                            phone: "$phone",
-                            source: "$source",
-                            lastContactDate: "$lastContactDate",
-                            nextFollowUpDate: "$nextFollowUpDate",
-                            createdAt: "$createdAt",
-                        },
-                    },
-                },
-            },
+        const skip = (page - 1) * limit;
+
+        const [totalItems, cards] = await Promise.all([
+            Card.countDocuments(),
+            Card.find({})
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean()
         ]);
+
+        const groupedMap = new Map();
+
+        for (const card of cards) {
+            if (!groupedMap.has(card.stage)) {
+                groupedMap.set(card.stage, []);
+            }
+
+            groupedMap.get(card.stage).push({
+                id: card._id,
+                name: card.name,
+                school: card.school,
+                role: card.role,
+                email: card.email,
+                phone: card.phone,
+                source: card.source,
+                lastContactDate: card.lastContactDate,
+                nextFollowUpDate: card.nextFollowUpDate,
+                createdAt: card.createdAt
+            });
+        }
+
+        const data = Array.from(groupedMap.entries()).map(([stage, prospects]) => ({
+            _id: stage,
+            prospects
+        }));
+
+        return {
+            data,
+            pagination: {
+                page,
+                limit,
+                totalItems,
+                totalPages: Math.max(1, Math.ceil(totalItems / limit))
+            }
+        };
     }
 
     async getCardById(id) {
@@ -53,14 +77,50 @@ export default class Repositories {
         return await note.save();
     }
 
-    async getNotesByProspect(prospectId) {
-        return await Note.find({ prospectId }).sort({ createdAt: -1 });
+    async getNotesByProspect(prospectId, { page, limit }) {
+        const skip = (page - 1) * limit;
+
+        const [totalItems, notes] = await Promise.all([
+            Note.countDocuments({ prospectId }),
+            Note.find({ prospectId })
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+        ]);
+
+        return {
+            data: notes,
+            pagination: {
+                page,
+                limit,
+                totalItems,
+                totalPages: Math.max(1, Math.ceil(totalItems / limit))
+            }
+        };
     }
 
     // ONBOARDING CHECKLIST(when stage is set to "Pilot Closed" )
 
-    async getChecklistByProspect(prospectId) {
-        return await Checklist.find({ prospectId }).sort({ stepNumber: 1 });
+    async getChecklistByProspect(prospectId, { page, limit }) {
+        const skip = (page - 1) * limit;
+
+        const [totalItems, checklist] = await Promise.all([
+            Checklist.countDocuments({ prospectId }),
+            Checklist.find({ prospectId })
+                .sort({ stepNumber: 1 })
+                .skip(skip)
+                .limit(limit)
+        ]);
+
+        return {
+            data: checklist,
+            pagination: {
+                page,
+                limit,
+                totalItems,
+                totalPages: Math.max(1, Math.ceil(totalItems / limit))
+            }
+        };
     }
 
 

@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import MainRoutes from "./src/routers/main.routs.js";
+import AuthRoutes from "./src/routers/auth.routes.js";
 
 dotenv.config({ path: "./src/.env" });
 
@@ -13,6 +14,7 @@ server.use(cookieParser());
 server.get("/",(req,res)=>{
     res.send("server is running..")
 })
+server.use("/api/auth", AuthRoutes);
 server.use("/api", MainRoutes);
 
 export default server;
