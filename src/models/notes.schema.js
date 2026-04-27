@@ -21,4 +21,7 @@ const NoteSchema = new Schema(
     }
 );
 
+// Optimizes getNotesByProspect(prospectId).sort({ createdAt: -1 }).
+NoteSchema.index({ prospectId: 1, createdAt: -1 });
+
 export default mongoose.model("Cardnote", NoteSchema);

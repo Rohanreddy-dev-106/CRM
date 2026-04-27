@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
 
 async function MongoDBconnection() {
-    const MONGO_URI = process.env.MONGODB_CONNECTION_STRING;
+    const MONGO_URI =
+        process.env.MONGODB_CONNECTION_STRING || process.env.MONGO_URI;
     if (!MONGO_URI) {
-        throw new Error("MONGO_URI is not defined in environment variables");
+        throw new Error(
+            "MongoDB URI is missing. Set MONGODB_CONNECTION_STRING or MONGO_URI in src/.env"
+        );
     }
     try {
         await mongoose.connect(MONGO_URI);

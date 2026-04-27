@@ -10,8 +10,9 @@ export default class MainController {
 
     async getAllCards(req, res, next) {
         try {
-            const cards = await this.repo.getAllCards();
-            res.status(200).json({ success: true, data: cards });
+            const query = req.validated?.query || req.query;
+            const cards = await this.repo.getAllCards(query);
+            res.status(200).json({ success: true, ...cards });
         } catch (err) {
             next(err);
         }
@@ -78,8 +79,9 @@ export default class MainController {
 
     async getNotesByCard(req, res, next) {
         try {
-            const notes = await this.repo.getNotesByProspect(req.params.cardId);
-            res.status(200).json({ success: true, data: notes });
+            const query = req.validated?.query || req.query;
+            const notes = await this.repo.getNotesByProspect(req.params.cardId, query);
+            res.status(200).json({ success: true, ...notes });
         } catch (err) {
             next(err);
         }
@@ -89,8 +91,9 @@ export default class MainController {
 
     async getChecklistByCard(req, res, next) {
         try {
-            const checklist = await this.repo.getChecklistByProspect(req.params.cardId);
-            res.status(200).json({ success: true, data: checklist });
+            const query = req.validated?.query || req.query;
+            const checklist = await this.repo.getChecklistByProspect(req.params.cardId, query);
+            res.status(200).json({ success: true, ...checklist });
         } catch (err) {
             next(err);
         }
