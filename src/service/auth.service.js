@@ -39,11 +39,12 @@ export async function registerUser(payload) {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
+
     const user = await User.create({
         name: String(name).trim(),
         email: normalizedEmail,
         password: passwordHash,
-        role
+        role: role || "agent"
     });
 
     return sanitizeUser(user);

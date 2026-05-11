@@ -40,7 +40,7 @@ const OnboardingChecklistSchema = new Schema(
         dueDate: Date
     },
     {
-        timestamps: { createdAt: true, updatedAt: false }
+        timestamps: true
     }
 );
 
