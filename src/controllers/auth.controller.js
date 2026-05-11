@@ -71,7 +71,7 @@ export default class AuthController {
             const user = await User.findByIdAndUpdate(
                 id,
                 { $set: { role } },
-                { new: true, runValidators: true }
+                { returnDocument: 'after', runValidators: true }
             ).select("-password");
 
             if (!user) {

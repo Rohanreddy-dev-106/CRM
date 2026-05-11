@@ -10,7 +10,7 @@ export const updateCardService = async (cardId, payload) => {
     const updated = await Card.findByIdAndUpdate(
         cardId,
         { $set: payload },
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     );
    //TODO:IMPORTEND lOGIC 
     if (

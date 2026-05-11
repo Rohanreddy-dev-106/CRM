@@ -132,7 +132,7 @@ export default class Repositories {
         return await Checklist.findByIdAndUpdate(
             id,
             { $set: { status } },
-            { new: true, runValidators: true }
+            { returnDocument: 'after', runValidators: true }
         );
     }
 }

@@ -31,7 +31,7 @@ server.use(cookieParser());
 // ─── Rate Limiting ───────────────────────────────────────────────
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100,
+    max: 5000, // Increased for dev
     standardHeaders: true,
     legacyHeaders: false,
     message: { success: false, message: "Too many requests, please try again later" },
@@ -39,7 +39,7 @@ const apiLimiter = rateLimit({
 
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 20, // stricter for auth endpoints
+    max: 1000, // stricter for auth endpoints, but high for dev
     standardHeaders: true,
     legacyHeaders: false,
     message: { success: false, message: "Too many auth attempts, please try again later" },
